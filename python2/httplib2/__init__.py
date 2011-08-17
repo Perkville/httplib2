@@ -214,7 +214,8 @@ def safename(filename):
 
 NORMALIZE_SPACE = re.compile(r'(?:\r\n)?[ \t]+')
 def _normalize_headers(headers):
-    return dict([ (key.lower(), NORMALIZE_SPACE.sub(value, ' ').strip())  for (key, value) in headers.iteritems()])
+    normalize_key = lambda k: '-'.join([l.capitalize() for l in k.split('-')])
+    return dict([ (normalize_key(key), NORMALIZE_SPACE.sub(value, ' ').strip())  for (key, value) in headers.iteritems()])
 
 def _parse_cache_control(headers):
     retval = {}
@@ -452,7 +453,7 @@ class BasicAuthentication(Authentication):
     def request(self, method, request_uri, headers, content):
         """Modify the request headers to add the appropriate
         Authorization header."""
-        headers['authorization'] = 'Basic ' + base64.b64encode("%s:%s" % self.credentials).strip()
+        headers['Authorization'] = 'Basic ' + base64.b64encode("%s:%s" % self.credentials).strip()
 
 
 class DigestAuthentication(Authentication):
